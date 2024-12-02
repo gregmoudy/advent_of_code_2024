@@ -1,15 +1,4 @@
 # --- Day 1: Historian Hysteria ---
-# The Chief Historian is always present for the big Christmas sleigh launch, but nobody has seen him in months! Last anyone heard, 
-# he was visiting locations that are historically significant to the North Pole; a group of Senior Historians has asked you to accompany 
-# them as they check the places they think he was most likely to visit.
-
-# As each location is checked, they will mark it on their list with a star. 
-# They figure the Chief Historian must be in one of the first fifty places they'll look, so in order to save Christmas, 
-# you need to help them get fifty stars on their list before Santa takes off on December 25th.
-
-# Collect stars by solving puzzles. Two puzzles will be made available on each day in the Advent calendar; 
-# the second puzzle is unlocked when you complete the first. Each puzzle grants one star. Good luck!
-
 # You haven't even left yet and the group of Elvish Senior Historians has already hit a problem: their list of locations 
 # to check is currently empty. Eventually, someone decides that the best place to check first would be the Chief Historian's office.
 
@@ -51,6 +40,38 @@
 
 # Your actual left and right lists contain many location IDs. What is the total distance between your lists?
 
+# --- Part Two ---
+# Your analysis only confirmed what everyone feared: the two lists of location IDs are indeed very different.
+
+# Or are they?
+
+# The Historians can't agree on which group made the mistakes or how to read most of the Chief's handwriting, 
+# but in the commotion you notice an interesting detail: a lot of location IDs appear in both lists! 
+# Maybe the other numbers aren't location IDs at all but rather misinterpreted handwriting.
+
+# This time, you'll need to figure out exactly how often each number from the left list appears in the right list. 
+# Calculate a total similarity score by adding up each number in the left list after multiplying it by the number of times that number appears in the right list.
+
+# Here are the same example lists again:
+
+# 3   4
+# 4   3
+# 2   5
+# 1   3
+# 3   9
+# 3   3
+
+# For these example lists, here is the process of finding the similarity score:
+
+# The first number in the left list is 3. It appears in the right list three times, so the similarity score increases by 3 * 3 = 9.
+# The second number in the left list is 4. It appears in the right list once, so the similarity score increases by 4 * 1 = 4.
+# The third number in the left list is 2. It does not appear in the right list, so the similarity score does not increase (2 * 0 = 0).
+# The fourth number, 1, also does not appear in the right list.
+# The fifth number, 3, appears in the right list three times; the similarity score increases by 9.
+# The last number, 3, appears in the right list three times; the similarity score again increases by 9.
+# So, for these example lists, the similarity score at the end of this process is 31 (9 + 4 + 0 + 0 + 9 + 9).
+
+# Once again consider your left and right lists. What is their similarity score?
 
 import solver
 import re
@@ -60,7 +81,36 @@ class Solver(solver.Solver):
     def get_answer(self, data, part2 = False):
         answer = 0
 
-        print('break')
+        left_list = list()
+        right_list = list()
+
+        for line in data:
+            num_strings = line.split('   ')
+
+            left_num = int(num_strings[0])
+            left_list.append(left_num)
+
+            right_num = int(num_strings[1])
+            right_list.append(right_num)
+
+        if not part2:
+            left_list.sort()
+            right_list.sort()
+
+            distances = list()
+            for i in range(len(left_list)):
+                distance = abs(left_list[i] - right_list[i])
+                distances.append(distance)
+            
+            answer = sum(distances)
+
+        elif part2:
+            similarities = list()
+            for i in range(len(left_list)):
+                similarity = left_list[i] * right_list.count(left_list[i])
+                similarities.append(similarity)
+            
+            answer = sum(similarities)
 
         return answer
     
@@ -69,8 +119,8 @@ class Solver(solver.Solver):
 def run():
     solver = Solver(__file__)
     solver.run()
-    # 
-    # 
+    # 2378066
+    # 18934359
 
 
 
